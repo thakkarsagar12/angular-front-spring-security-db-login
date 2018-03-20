@@ -1,20 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpXsrfTokenExtractor} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
+/*
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        // add authorization header with jwt token if available
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser && currentUser.token) {
-            request = request.clone({
-                setHeaders: { 
-                    Authorization: `Bearer ${currentUser.token}`
-                }
-            });
-        }
+  constructor(private tokenExtractor: HttpXsrfTokenExtractor) {}
 
-        return next.handle(request);
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+    let requestMethod: string = req.method;
+    requestMethod = requestMethod.toLowerCase();
+
+    if (requestMethod && (requestMethod === 'post' || requestMethod === 'delete' || requestMethod === 'put' || requestMethod === 'get')) {
+      const headerName = 'X-XSRF-TOKEN';
+      let token = this.tokenExtractor.getToken() as string;
+      if (token !== null && !req.headers.has(headerName)) {
+        req = req.clone({ headers: req.headers.set(headerName, token) });
+      }
     }
+
+    return next.handle(req);
+  }
 }
+*/
