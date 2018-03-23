@@ -1,58 +1,47 @@
+﻿import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {Injectable, NgModule} from '@angular/core';
-import {HTTP_INTERCEPTORS, HttpClientModule, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {RouterModule, Routes} from '@angular/router';
+import { FormsModule }    from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+// used to create fake backend
 
-import { AppComponent } from './app.component';
-import {FormsModule} from '@angular/forms';
-import {HomeComponent} from './home/home.component';
-import {LoginComponent} from './login/login.component';
-import {AppService} from './app.service';
-import {AuthGuard} from './security/auth.guard';
-// import {JwtInterceptor} from "./security/jwt.interceptor";
+import { AppComponent }  from './app.component';
+import { routing }        from './app.routing';
 
-// @Injectable()
-// export class XhrInterceptor implements HttpInterceptor {
-//
-//   intercept(req: HttpRequest<any>, next: HttpHandler) {
-//     const xhr = req.clone({
-//       headers: req.headers.set('X-Requested-With', 'XMLHttpRequest')
-//     });
-//     return next.handle(xhr);
-//   }
-// }
-
-const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'home', canActivate: [AuthGuard]},
-  { path: 'home', component: HomeComponent},
-  { path: 'login', component: LoginComponent}
-];
+import { AlertComponent } from './_directives/index';
+import { AuthGuard } from './_guards/index';
+import { JwtInterceptor } from './_helpers/index';
+import { AlertService, AuthenticationService, UserService } from './_services/index';
+import { HomeComponent } from './home/index';
+import { LoginComponent } from './login/index';
+import { RegisterComponent } from './register/index';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    LoginComponent
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    RouterModule.forRoot(routes)
-  ],
-  providers: [
-    AuthGuard,
-    AppService,
-    // { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }
-   /* {
-      provide: HTTP_INTERCEPTORS,
-      useClass: JwtInterceptor,
-      multi: true
-    },*/
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        routing
     ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        AlertComponent,
+        HomeComponent,
+        LoginComponent,
+        RegisterComponent
+    ],
+    providers: [
+        AuthGuard,
+        AlertService,
+        AuthenticationService,
+        UserService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: JwtInterceptor,
+            multi: true
+        },
+    ],
+    bootstrap: [AppComponent]
 })
+
 export class AppModule { }
-
-
