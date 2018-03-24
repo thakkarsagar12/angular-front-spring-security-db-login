@@ -16,7 +16,7 @@ export class UserService {
     }
 
     create(user: User) {
-        return this.http.post('/api/users', user);
+        return this.http.post('http://localhost:8080/sign-up', user);
     }
 
     update(user: User) {
